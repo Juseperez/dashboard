@@ -20,7 +20,11 @@ function App() {
       <Grid size={{ xs: 12, md: 12 }}
         container justifyContent="right" alignItems="center">
 
-        <AlertUI description="No se preveen lluvias" /></Grid>
+        <AlertUI
+          description="No se preveen lluvias"
+          variant="outlined"
+          severity="info"
+        /></Grid>
 
       {/* Selector */}
       <Grid size={{ xs: 12, md: 3 }}><SelectorUI /></Grid>
