@@ -39,12 +39,18 @@ export default function TableUI() {
     const { data, loading, error } = DataFetcher();
 
     const rows = getRows(data);
+    const dataError = !loading && !error && rows.length === 0;
 
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             {loading && <CircularProgress />}
             {error && <Alert severity="error">{error}</Alert>}
-            {!loading && !error && (
+            {dataError && (
+                <Alert severity="error">
+                    Error al procesar los datos de la API. Intente nuevamente más tarde.
+                </Alert>
+            )}
+            {!loading && !error && !dataError && (
                 <DataGrid
                     rows={rows}
                     columns={columns}
