@@ -7,13 +7,29 @@ interface DataFetcherOutput {
     error: string | null;
 }
 
-function DataFetcher(): DataFetcherOutput {
+const cityCoords: Record<string, { lat: number, lon: number }> = {
+    guayaquil: { lat: -2.1962, lon: -79.8862 },
+    quito: { lat: -0.2298, lon: -78.525 },
+    manta: { lat: -0.9494, lon: -80.7314 },
+    cuenca: { lat: -2.9005, lon: -79.0045 }
+};
+
+function DataFetcher(city: string): DataFetcherOutput {
     const [data, setData] = useState<OpenMeteoResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m&timezone=America%2FChicago';
+        if (!cityCoords[city]) {
+            setError("Ciudad no válida");
+            setLoading(false);
+            return;
+        }
+        setLoading(true);
+        setError(null);
+
+        const { lat, lon } = cityCoords[city];
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m&timezone=America%2FChicago`;
 
         const fetchData = async () => {
             try {
@@ -35,7 +51,7 @@ function DataFetcher(): DataFetcherOutput {
         };
 
         fetchData();
-    }, []);
+    }, [city]);
 
     return { data, loading, error };
 }

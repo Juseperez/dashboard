@@ -35,8 +35,8 @@ const columns: GridColDef[] = [
     { field: 'viento', headerName: 'Viento 10m (km/h)', width: 150 },
 ];
 
-export default function TableUI() {
-    const { data, loading, error } = DataFetcher();
+export default function TableUI({ city }: { city: string }) {
+    const { data, loading, error } = DataFetcher(city);
 
     const rows = getRows(data);
     const dataError = !loading && !error && rows.length === 0;

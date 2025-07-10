@@ -4,8 +4,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import DataFetcher from '/workspaces/dashboard/src/functions/DataFetcher.tsx';
 
-export default function ChartUI() {
-  const { data, loading, error } = DataFetcher();
+export default function ChartUI({ city }: { city: string }) {
+  const { data, loading, error } = DataFetcher(city);
 
   let arrLabels: string[] = [];
   let arrValues1: number[] = [];
