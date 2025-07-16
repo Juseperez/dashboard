@@ -36,9 +36,9 @@ function DataFetcher(city: string): DataFetcherOutput {
             try {
                 const cache = JSON.parse(cacheStr);
                 const now = new Date().getTime();
-                const TEN_MINUTES = 10 * 60 * 1000;
+                const time = 10 * 60 * 1000; //tiempo de 10 minutos
 
-                if (now - cache.timestamp < TEN_MINUTES) {
+                if (now - cache.timestamp < time) {
                     setData(cache.data);
                     setLoading(false);
                     return;
