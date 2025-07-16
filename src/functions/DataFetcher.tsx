@@ -31,6 +31,23 @@ function DataFetcher(city: string): DataFetcherOutput {
         const { lat, lon } = cityCoords[city];
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m&timezone=America%2FChicago`;
 
+        const cacheStr = localStorage.getItem(`weather_${city}`);
+        if (cacheStr) {
+            try {
+                const cache = JSON.parse(cacheStr);
+                const now = new Date().getTime();
+                const time = 10 * 60 * 1000; //tiempo de 10 minutos
+
+                if (now - cache.timestamp < time) {
+                    setData(cache.data);
+                    setLoading(false);
+                    return;
+                }
+            } catch (e) {
+                console.warn("Error al leer caché del localStorage", e);
+            }
+        }
+
         const fetchData = async () => {
             try {
                 const response = await fetch(url);
@@ -38,6 +55,14 @@ function DataFetcher(city: string): DataFetcherOutput {
                     throw new Error(`Error en la petición: ${response.status}`);
                 }
                 const result: OpenMeteoResponse = await response.json();
+
+                const now = new Date().getTime();
+                const cache = {
+                    timestamp: now,
+                    data: result,
+                };
+                localStorage.setItem(`weather_${city}`, JSON.stringify(cache));
+
                 setData(result);
             } catch (err: any) {
                 if (err instanceof Error) {
